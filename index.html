@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<link rel="manifest" href="./manifest.json">
+
+<style>
+    header {
+        padding: 30px;
+        text-align: center;
+        font-size: 35px;
+        color: rgb(0, 0, 0);
+    }
+
+    nav {
+        padding: 30px;
+        text-align: center;
+        font-size: 40px;
+        color: rgb(0, 0, 0);
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <nav>
+        <h1>Do you want it to go up or down. You choice.</h1>
+
+        <p id="nummer"></p>
+    </nav>
+    <header>
+
+        <button type="plus" id="plus">+</button>
+        <button type="min" id="min">-</button>
+
+    </header>
+
+</body>
+
+</html>
+
+<script>
+
+    const endpoint = "http://10.30.160.226:8000"
+    let x = 1
+
+    function verwerkNummer(response) {
+        response.json().then(
+            function (data) {
+                console.log(data)
+                x = data.number
+                document.getElementById('nummer').textContent = x;
+
+            }
+        )
+    }
+
+    function updateNumber() {
+        fetch(endpoint + "/number").then(verwerkNummer)
+    }
+
+    updateNumber()
+    setInterval(updateNumber, 100);
+
+
+
+    document.querySelector("#min").addEventListener("click", decrement)
+    document.querySelector("#plus").addEventListener("click", increment)
+
+    function increment() {
+        fetch(endpoint + "/fouten/increment", { method: "POST" }).then(verwerkNummer)
+    }
+
+    function decrement() {
+        fetch(endpoint + "/fouten/decrement", { method: "POST" }).then(verwerkNummer)
+    }
+
+
+</script>
